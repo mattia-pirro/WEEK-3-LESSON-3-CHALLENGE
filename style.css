@@ -1,0 +1,72 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	max-width: 600px;
+	margin: 30px auto;
+	padding: 20px;
+	color: #1b2845;
+}
+
+h1 {
+	margin-bottom: 24px;
+}
+
+.aggiunta {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+input {
+	flex: 1;
+	padding: 10px;
+	font-size: 16px;
+	font-family: inherit;
+}
+
+button {
+	padding: 10px 20px;
+	cursor: pointer;
+	font-family: inherit;
+}
+
+ul {
+	list-style: none;
+	padding: 0;
+}
+
+li {
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+}
+
+/* Aggiungi qui le tue regole CSS per:
+   - .priorita-alta / .priorita-media / .priorita-bassa
+   - .badge (l'etichetta della priorità dentro il task)
+   - .data (la data di creazione)
+   - .evidenziato (sfondo giallo, bordo)
+*/
+
+.check{
+	margin-right: 12px;
+}
+
+li button {
+	font-size: 12px;
+	height: fit-content;
+	padding: 4px 10px;
+	margin-left: 5px;
+	float: right;
+	border-radius: 6px;
+	background-color: white;
+	color: red;
+	border: 1px solid red;
+}
+
+button:hover {
+	background-color: red;
+	color: white;
+}
