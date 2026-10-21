@@ -16,75 +16,127 @@
 const lista = document.querySelector('#lista-task');
 const contatore = document.querySelector('#contatore');
 const newTask = document.querySelector('#nuovo-task');
+const addBtn = document.querySelector('#bottone-aggiungi');
+const textError = document.querySelector('#errore');
+const tutti = document.querySelector('#btnTutti');
+const attivi = document.querySelector('#btnAttivi');
+const completati = document.querySelector('#btnCompletati');
 
-const myTask = [
+let filtro = "tutti";
+
+const tasks = [
   {
-    titoloTask: 'Studiare JavaScript',
+    id: 1,
+    testo: 'Studiare JavaScript',
+    completato: true,
   },
   {
-    titoloTask: 'Scrivere la ToDoList',
+    id: 2,
+    testo: 'Scrivere la ToDoList',
+    completato: false,
   },
   {
-    titoloTask: 'Bere il caffe',
+    id: 3,
+    testo: 'Bere il caffe',
+    completato: true,
   },
   {
-    titoloTask: 'Ripassare gli eventi DOM',
+    id: 4,
+    testo: 'Ripassare gli eventi DOM',
+    completato: false,
   },
 ];
 
-function taskArray() {
+addBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  const testoTask = newTask.value.trim();
+
+  if (testoTask === '') {
+    textError.textContent = 'Nessun testo inserito, riprova!';
+    return;
+  } else {
+    textError.textContent = '';
+    tasks.push({
+      id: Date.now(),
+      testo: testoTask,
+      completato: false,
+    });
+
+    newTask.value = '';
+    rendiLista();
+  }
+});
+
+function rendiLista() {
   lista.textContent = '';
 
-  myTask.forEach((task , index) => {
+  const filtroTasks = tasks.filter(task => {
+    if (filtro === 'attivi') {
+      return !task.completato;
+    } else if (filtro === 'completati') {
+      return task.completato;
+    } else {
+      return true;
+    }
+  });
+
+  filtroTasks.forEach((task) => {
     const newLi = document.createElement('li');
+    newLi.dataset.id = task.id;
 
     const checkbox = document.createElement('input');
     checkbox.classList.add('check');
+    checkbox.checked = task.completato;
     checkbox.type = 'checkbox';
     newLi.appendChild(checkbox);
 
     const textSpan = document.createElement('span');
-    textSpan.classList.add('testo');
-    textSpan.textContent = task.titoloTask;
+    textSpan.textContent = task.testo;
     newLi.appendChild(textSpan);
+
+    if (task.completato === true){
+        textSpan.style.textDecoration = 'line-through';
+    }
 
     const elimina = document.createElement('button');
     elimina.type = 'button';
-    elimina.setAttribute('id', index + 1);
+    
     elimina.textContent = 'Elimina';
     newLi.appendChild(elimina);
 
     lista.appendChild(newLi);
   });
+
+  contatore.textContent = tasks.filter(task => !task.completato).length;
 }
 
-taskArray();
-
-contatore.textContent = myTask.length;
-
-function aggiungiTask() {
-  const testoTask = newTask.value.trim();
-
-  if (testoTask === '') {
-    return;
-  }
-
-  myTask.push({
-    titoloTask: testoTask,
-  });
-
-  contatore.textContent = myTask.length;
-
-  newTask.value = '';
-
-  taskArray();
-}
+rendiLista();
 
 lista.addEventListener('click', (e) => {
   e.preventDefault();
   if (e.target.type === 'button') {
-    myTask.splice(e.target.id - 1, 1);
-    taskArray();
-    contatore.textContent = myTask.length;
+    for(let i = 0; i < tasks.length; i++){
+      const id = Number(e.target.closest('li').dataset.id);
+      if (tasks[i].id === id){
+        tasks.splice(i, 1);
+        break;
+      }
+    }
+    rendiLista();
   }
 });
+
+lista.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (e.target.type === 'checkbox') {
+    for(let i = 0; i < tasks.length; i++){
+      const id = Number(e.target.closest('li').dataset.id);
+      if (tasks[i].id === id){
+        tasks[i].completato = e.target.checked;
+        break;
+      }
+    }
+    rendiLista();
+  }
+});
+
