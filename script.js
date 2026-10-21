@@ -1,17 +1,3 @@
-/*
-  REGOLE
-  - Continua quello che hai iniziato stamani in classe.
-  - Niente eventi (li vediamo domani): chiama le funzioni dalla console o all'avvio.
-  - Solo const/let, mai var. Solo querySelector/querySelectorAll per il DOM.
-*/
-
-/* SCRIVI QUI LE TUE FUNZIONI:
-   1. Modifica aggiungiTask per accettare priorita
-   2. Aggiungi bottone Elimina su ogni task
-   6. evidenzia(indice) / togliEvidenza(indice)
-   7. data automatica nel task
-   8. contaPerPriorita()
-*/
 
 const lista = document.querySelector('#lista-task');
 const contatore = document.querySelector('#contatore');
@@ -70,15 +56,19 @@ addBtn.addEventListener('click', (e) => {
 function rendiLista() {
   lista.textContent = '';
 
-  const filtroTasks = tasks.filter(task => {
-    if (filtro === 'attivi') {
-      return !task.completato;
-    } else if (filtro === 'completati') {
-      return task.completato;
-    } else {
-      return true;
+  const filtroTasks = [];
+
+  for (let i = 0; i < tasks.length; i++) {
+    const task = tasks[i];
+
+    if (filtro === 'attivi' && !task.completato) {
+      filtroTasks.push(task);
+    } else if (filtro === 'completati' && task.completato) {
+      filtroTasks.push(task);
+    } else if (filtro === 'tutti') {
+      filtroTasks.push(task);
     }
-  });
+  }
 
   filtroTasks.forEach((task) => {
     const newLi = document.createElement('li');
@@ -94,20 +84,26 @@ function rendiLista() {
     textSpan.textContent = task.testo;
     newLi.appendChild(textSpan);
 
-    if (task.completato === true){
-        textSpan.style.textDecoration = 'line-through';
+    if (task.completato === true) {
+      textSpan.style.textDecoration = 'line-through';
     }
 
     const elimina = document.createElement('button');
     elimina.type = 'button';
-    
+
     elimina.textContent = 'Elimina';
     newLi.appendChild(elimina);
 
     lista.appendChild(newLi);
   });
 
-  contatore.textContent = tasks.filter(task => !task.completato).length;
+  let taskAttivi = 0;
+  for (let i = 0; i < tasks.length; i++) {
+    if (!tasks[i].completato) {
+      taskAttivi++;
+    }
+  }
+  contatore.textContent = taskAttivi;
 }
 
 rendiLista();
@@ -115,9 +111,9 @@ rendiLista();
 lista.addEventListener('click', (e) => {
   e.preventDefault();
   if (e.target.type === 'button') {
-    for(let i = 0; i < tasks.length; i++){
+    for (let i = 0; i < tasks.length; i++) {
       const id = Number(e.target.closest('li').dataset.id);
-      if (tasks[i].id === id){
+      if (tasks[i].id === id) {
         tasks.splice(i, 1);
         break;
       }
@@ -129,9 +125,9 @@ lista.addEventListener('click', (e) => {
 lista.addEventListener('click', (e) => {
   e.preventDefault();
   if (e.target.type === 'checkbox') {
-    for(let i = 0; i < tasks.length; i++){
+    for (let i = 0; i < tasks.length; i++) {
       const id = Number(e.target.closest('li').dataset.id);
-      if (tasks[i].id === id){
+      if (tasks[i].id === id) {
         tasks[i].completato = e.target.checked;
         break;
       }
@@ -140,3 +136,23 @@ lista.addEventListener('click', (e) => {
   }
 });
 
+lista.addEventListener('click', (e) => {
+  if (e.target.checked === true) {
+
+  }
+});
+
+tutti.addEventListener('click', () => {
+  filtro = 'tutti';
+  rendiLista();
+});
+
+attivi.addEventListener('click', () => {
+  filtro = 'attivi';
+  rendiLista();
+});
+
+completati.addEventListener('click', () => {
+  filtro = 'completati';
+  rendiLista();
+});
