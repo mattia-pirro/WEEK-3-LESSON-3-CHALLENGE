@@ -136,12 +136,6 @@ lista.addEventListener('click', (e) => {
   }
 });
 
-lista.addEventListener('click', (e) => {
-  if (e.target.checked === true) {
-
-  }
-});
-
 tutti.addEventListener('click', () => {
   filtro = 'tutti';
   rendiLista();
